@@ -23,7 +23,6 @@ spring:
         watch:
           enabled: true
           delay: 1000
-
 #
 #    vault:
 #      enabled: false

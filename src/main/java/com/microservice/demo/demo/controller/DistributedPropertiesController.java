@@ -1,10 +1,12 @@
 package com.microservice.demo.demo.controller;
 
 
+import com.microservice.demo.demo.service.DemoServerService;
 import com.netflix.appinfo.InstanceInfo;
+import com.netflix.discovery.DiscoveryClient;
 import com.netflix.discovery.EurekaClient;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,32 +22,38 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @Slf4j
 public class DistributedPropertiesController {
 
-    @Autowired
+
     HelloClient client;
 
-    @Autowired
-    private EurekaClient eurekaClient;
+    private final DemoServerService demoServerService;
 
+
+
+
+    public DistributedPropertiesController(HelloClient helloClient, DemoServerService demoServerService) {
+        this.client = helloClient;
+        this.demoServerService = demoServerService;
+
+    }
 
     @GetMapping("/get_instance/")
     public String serviceUrl() {
 
-        return getUrlFromEureka();
+        return demoServerService.getUrlFromEureka();
     }
 
-    private String getUrlFromEureka() {
 
-        InstanceInfo instance = eurekaClient.getNextServerFromEureka("DEMO-SERVER", false);
-        return instance.getHomePageUrl();
-    }
 
 
     @GetMapping("/get-from-demo-server")
-    public String getFromDemoServer(){
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForObject(getUrlFromEureka(), String.class);
+    public String getFromDemoServerEndpoint(){
+        return this.demoServerService.getFromDemoServer();
 
     }
+
+
+
+
 
 
     @Value("${external.value:fallback}")
