@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: default
+  name: demo-microservices
+  labels:
+    app: demo-microservices
+    tier: backend
+spec:
+  type: NodePort
+  ports:
+    # the port that this service should serve on
+  - port: 8080
+    nodePort: 30001
+  selector:
+    app: demo-microservices
+    tier: backend
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: default
+  name: demo-microservices
+spec:
+  replicas: 1
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        app: demo-microservices
+        tier: backend
+    spec:
+      containers:
+      - name: demo-microservices
+        image: jjenksy/demo
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - name: springboot-app
+          containerPort: 8080
+        livenessProbe:
+                  httpGet:
+                    path: /actuator/health
+                    port: springboot-app
+                  initialDelaySeconds: 180
+                  periodSeconds: 10
+        readinessProbe:
+                  httpGet:
+                    path: /actuator/health
+                    port: springboot-app
+                  initialDelaySeconds: 15
+                  periodSeconds: 3
+#        todo have devops inject this during build process
+        env:
+        - name: APP_VERSION
+          value: dev
+        - name: SPRING_PROFILES_ACTIVE
+          value: dev
+        - name: APP_NAME
+          value: demo-microservices
+        - name: LOGLEVEL
+          value: DEBUG

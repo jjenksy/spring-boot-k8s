@@ -1,0 +1,95 @@
+spring:
+  application:
+    name: demo-microservices
+    version: ${APP_VERSION:-1}
+    description: demo microservice
+#    consul settings need to change per environment
+  cloud:
+    consul:
+      enabled: true
+      host: localhost
+      port: 8500
+#      enable service discovery we can use this or Eureka
+      config:
+#      enable configs to externalize the configurations for each envirment
+        enabled: false
+        format: YAML
+#        sets the prefix to loook for in consul for this app it would be /config/heb-demo-microservice-api/data for a specific enviroment we can append with /config/heb-demo-microservice-api,dev/data to access configs for dev
+        prefix: config
+        data-key: data
+#        default configs that are settings for all apps in the form /config/general/data
+        defaultContext: general
+        profileSeparator: '-'
+        watch:
+          enabled: true
+          delay: 1000
+
+#
+#    vault:
+#      enabled: false
+#      host: localhost
+#      port: 8200
+#      scheme: http
+#      connection-timeout: 1000
+#      read-timeout: 5000
+#      application-name: ihm-app/ihm-ratings-api
+#      token: NOT_VALID_INSERT_A_GOOD_TOKEN_HERE
+#      config.order: -10
+
+
+#expose all actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+logging:
+  level:
+    root: INFO
+    com.netflix.discovery: ERROR
+    org.springframework: ERROR
+  file: ${spring.application.name}.log
+
+##todo adjust configs for named registry
+---
+spring:
+  profiles: dev,ci,perf,stg,prod
+  cloud:
+    consul:
+      enabled: true
+#      this is the dns name of the service in the k8s cluster
+      host: config-svc-consul
+      port: 8500
+      config.enabled: true
+
+eureka:
+  client:
+    enabled: true
+    serviceUrl:
+      defaultZone: http://discovery-server:8761/eureka/
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+#    vault:
+#      enabled: true
+#      scheme: http
+#      host: localhost
+#      port: 8200
+#      token: ${VAULT_CLIENT_TOKEN}
+#
+
+---
+spring:
+  profiles: local
+
+
+eureka:
+  client:
+    enabled: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+  instance:
+      metadataMap:
+        instanceId: ${spring.application.name}:${random.int}
+      preferIpAddress: true
