@@ -1,4 +1,4 @@
-package com.microservice.demo.demo;
+package com.microservice.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.cloud.client.SpringCloudApplication;

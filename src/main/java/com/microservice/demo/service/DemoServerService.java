@@ -1,4 +1,4 @@
-package com.microservice.demo.demo.service;
+package com.microservice.demo.service;
 
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;

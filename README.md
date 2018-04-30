@@ -1,5 +1,8 @@
 #Deploy Local
-
+Change your enviroment to the minikube docker enviroment when building the image
+```
+eval $(minikube docker-env)
+```
 When using minikube you deploy the service by running
 
 ```$xslt
