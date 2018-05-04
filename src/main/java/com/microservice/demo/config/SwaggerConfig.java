@@ -28,7 +28,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
     }
     private ApiInfo metaData() {
         return new ApiInfoBuilder()
-                .title("Spring Boot REST API")
+                .title("H.E.B. Demo REST API")
                 .description("\"Spring Boot REST API for HEB microservice\"")
                 .version("1.0.0")
                 .license("Apache License Version 2.0")

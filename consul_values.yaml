@@ -19,7 +19,7 @@ Domain: consul
 
 ## Used as selector
 Component: "consul"
-Replicas: 1
+Replicas: 2
 Image: "consul"
 ImageTag: "1.0.0"
 ImagePullPolicy: "Always"

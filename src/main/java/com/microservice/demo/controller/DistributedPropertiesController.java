@@ -8,33 +8,31 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 
 @RestController
 @Slf4j
 @RequestMapping("/demo")
+@RefreshScope
 @Api(value="microservice-demo", description="Operations for spring boot microservice demo")
 public class DistributedPropertiesController {
 
 
-    HelloClient client;
+
 
     private final DemoServerService demoServerService;
 
+    @Value("${external.value:fallback}")
+    private String value;
 
 
-
-    public DistributedPropertiesController(HelloClient helloClient, DemoServerService demoServerService) {
-        this.client = helloClient;
+    public DistributedPropertiesController(DemoServerService demoServerService) {
         this.demoServerService = demoServerService;
-
     }
 
 
@@ -61,33 +59,27 @@ public class DistributedPropertiesController {
 
     }
 
-    @Value("${external.value:fallback}")
-    private String value;
+
 
     @ApiOperation(value = "Get the value that is being inject by consul and the param you pass to uppercase", response = String.class)
     @ApiResponses(value  = {
             @ApiResponse(code = 200, message = "Successfully retrieved value"),
     })
-    @GetMapping("/upper_name/{name}")
-    public String getConfigFromValue(@PathVariable("name") String name) {
-        log.error("Value {}", name);
-        return name.toUpperCase() + value;
+    @GetMapping("/consul_value/}")
+    public String getConfigFromValue() {
+
+        return value;
     }
 
     @ApiOperation(value = "This api endpoint returns the same as /get-from-demo-server\" but it uses the netflix OSS feignclient to make the call instead of restTemplate ", response = String.class)
     @ApiResponses(value  = {
             @ApiResponse(code = 200, message = "Successfully retrieved value from demo server"),
     })
-    @GetMapping("/discovery_client")
+    @GetMapping("/feign_client")
     public String discoveryPing() {
-        return client.hello();
+        return demoServerService.feignClient();
     }
 
 
-    //todo implement server to talk to
-    @FeignClient("demo-server")
-    interface HelloClient {
-        @RequestMapping(value = "/", method = GET)
-        String hello();
-    }
+
 }

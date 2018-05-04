@@ -1,3 +1,4 @@
+#todo debug why the name reverts to S in k8s enviroment
 spring:
   application:
     name: demo-microservices
@@ -9,6 +10,7 @@ spring:
       enabled: true
       host: localhost
       port: 8500
+#      enable service discovery we can use this or Eureka
 #      enable service discovery we can use this or Eureka
       config:
 #      enable configs to externalize the configurations for each envirment
@@ -49,10 +51,12 @@ logging:
     org.springframework: ERROR
   file: ${spring.application.name}.log
 
-##todo adjust configs for named registry
+
 ---
 spring:
   profiles: dev,ci,perf,stg,prod
+  application:
+      name: demo-microservices
   cloud:
     consul:
       enabled: true
