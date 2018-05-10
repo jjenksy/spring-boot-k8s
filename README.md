@@ -26,3 +26,7 @@ to deploy consul run
 helm install stable/consul --name config-svc -f consul_values.yaml
 ```
 This will read the configs from the consul_values.yaml and deploy to k8's enviroment
+
+
+#Apply RBAC roles of admin to default
+kubectl apply -f fabric8-rbac.yaml

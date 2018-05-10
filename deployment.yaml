@@ -1,40 +1,49 @@
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  namespace: default
-#  name: demo-microservices
-#  labels:
-#    app: demo-microservices
-#    tier: backend
-#spec:
-#  type: NodePort
-#  ports:
-#    # the port that this service should serve on
-#  - port: 8080
-#    nodePort: 30001
-#  selector:
-#    app: demo-microservices
-#    tier: backend
-#
-#---
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: demo-microservices-k8s
+  namespace: default
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: default
+  name: demo-microservices-k8s
+  labels:
+    app: demo-microservices-k8s
+    tier: backend
+spec:
+  type: NodePort
+  ports:
+    # the port that this service should serve on
+  - port: 8080
+    nodePort: 30018
+  selector:
+    app: demo-microservices-k8s
+    tier: backend
+
+---
 
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   namespace: default
-  name: demo-microservices
+  name: demo-microservices-k8s
 spec:
   replicas: 1
   minReadySeconds: 10
   template:
     metadata:
       labels:
-        app: demo-microservices
+        app: demo-microservices-k8s
         tier: backend
     spec:
       containers:
-      - name: demo-microservices
-        image: jjenksy/demo
+      - name: demo-microservices-k8s
+        image: jjenksy/demo-microservices-k8s
         imagePullPolicy: IfNotPresent
         resources:
           requests:
@@ -62,6 +71,6 @@ spec:
         - name: SPRING_PROFILES_ACTIVE
           value: dev
         - name: APP_NAME
-          value: demo-microservices
+          value: demo-microservices-k8s
         - name: LOGLEVEL
           value: DEBUG
