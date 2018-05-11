@@ -30,3 +30,6 @@ This will read the configs from the consul_values.yaml and deploy to k8's enviro
 
 #Apply RBAC roles of admin to default
 kubectl apply -f rbac.yaml
+
+## Create external configs for app
+kubectl create -f config-map.yml

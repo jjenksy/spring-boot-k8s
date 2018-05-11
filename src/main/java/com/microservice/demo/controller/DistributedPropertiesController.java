@@ -1,6 +1,7 @@
 package com.microservice.demo.controller;
 
 
+import com.microservice.demo.config.ConfigMap;
 import com.microservice.demo.service.DemoServerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
@@ -19,8 +20,12 @@ public class DistributedPropertiesController {
 
     private final DemoServerService demoServerService;
 
-    public DistributedPropertiesController(DemoServerService demoServerService) {
+
+    private ConfigMap config;
+
+    public DistributedPropertiesController(DemoServerService demoServerService, ConfigMap config) {
         this.demoServerService = demoServerService;
+        this.config = config;
     }
 
 
@@ -39,6 +44,11 @@ public class DistributedPropertiesController {
         return demoServerService.getFromDemoServer();
     }
 
+
+    @GetMapping("/config-map")
+    public String getConfigData(){
+        return this.config.getMessage();
+    }
 
 
 }

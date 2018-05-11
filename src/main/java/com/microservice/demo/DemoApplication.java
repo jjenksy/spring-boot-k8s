@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * THe @SpringCloudApplication annotation replaces the old @SpringBootApplciation annotation and add
@@ -14,6 +15,7 @@ import org.springframework.cloud.netflix.ribbon.RibbonClient;
 @EnableDiscoveryClient
 @EnableCircuitBreaker
 @SpringBootApplication
+@EnableScheduling
 @RibbonClient(name = "name-service", configuration = RibbonConfiguration.class)
 public class DemoApplication {
 

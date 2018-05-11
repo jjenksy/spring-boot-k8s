@@ -8,6 +8,8 @@ spring:
 
 #expose all actuator endpoints
 
+spring.cloud.kubernetes.reload.enabled: true
+
 logging:
   level:
     root: INFO
