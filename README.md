@@ -13,7 +13,7 @@ This will create the pods, replica sets and services.
 
 To expose the services nodePort run 
 ```$xslt
-minikube service demo-microservices --url
+minikube service demo-microservices-k8s --url
 ```
 It will give you an ind port to hit.
 
@@ -29,4 +29,4 @@ This will read the configs from the consul_values.yaml and deploy to k8's enviro
 
 
 #Apply RBAC roles of admin to default
-kubectl apply -f fabric8-rbac.yaml
+kubectl apply -f rbac.yaml
